@@ -18,7 +18,7 @@
 参见 `.env.example`：
 
 ```env
-APP_PASSWORD_HASH=$2b$10$ONpvIND6PIVlvgEZrhrG3O2XllU8i.p4eBYM2nmccf2LO4kTlJSGG
+APP_PASSWORD_HASH=$2b$10$***************************
 SESSION_SECRET=change-me-to-a-long-random-string
 DATABASE_PATH=.data/clipboard.dev.db
 ```
