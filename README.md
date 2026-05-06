@@ -2,11 +2,9 @@
 
 一个轻量、私人的临时文本中转站。它**不是**一个自动剪贴板同步工具：你需要在一台设备上手动粘贴文本并保存，然后在另一台设备上手动复制。
 
-设计上准备部署在 VPS 上，前面挂 Cloudflare Tunnel 与 Cloudflare Access；应用本身仍然有一层共享密码登录作为兜底。
-
 ## 技术栈
 
-- Next.js App Router (Next.js 16)
+- Next.js App Router
 - TypeScript
 - Tailwind CSS v4
 - shadcn/ui
@@ -55,7 +53,7 @@ cp .env.example .env.local
 pnpm dev
 ```
 
-打开 <http://localhost:3000>，使用 `APP_PASSWORD_HASH` 对应的原始密码登录。示例 `.env.example` 中的 hash 对应密码是 `change-me`，请在实际部署前替换。
+打开 <http://localhost:3000>，使用 `APP_PASSWORD_HASH` 对应的原始密码登录。
 
 ## 生成 bcrypt hash
 
