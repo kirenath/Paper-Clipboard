@@ -1,0 +1,398 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------
+   Editorial Letterpress palette
+   5 colors total: cream paper, ink, card cream, warm border, oxblood.
+--------------------------------------------------------------- */
+:root {
+  /* warm cream "page" */
+  --background: oklch(0.962 0.018 78);
+  /* ink: near-black with warm brown undertone */
+  --foreground: oklch(0.21 0.02 50);
+  /* "card" cream: a touch lighter than the page so it lifts off */
+  --card: oklch(0.985 0.012 80);
+  --card-foreground: oklch(0.21 0.02 50);
+  --popover: oklch(0.985 0.012 80);
+  --popover-foreground: oklch(0.21 0.02 50);
+
+  /* primary = oxblood / terracotta accent */
+  --primary: oklch(0.46 0.13 28);
+  --primary-foreground: oklch(0.98 0.01 80);
+
+  /* secondary / muted = warm soft beige */
+  --secondary: oklch(0.93 0.014 75);
+  --secondary-foreground: oklch(0.32 0.022 55);
+  --muted: oklch(0.93 0.014 75);
+  --muted-foreground: oklch(0.48 0.02 60);
+
+  /* accent = a subtle ochre (used very sparingly, not a 5th color in UI) */
+  --accent: oklch(0.91 0.04 80);
+  --accent-foreground: oklch(0.32 0.04 50);
+
+  --destructive: oklch(0.5 0.18 28);
+  --destructive-foreground: oklch(0.98 0.01 80);
+
+  /* warm gray border, hairline-thin in use */
+  --border: oklch(0.83 0.018 70);
+  --input: oklch(0.86 0.014 75);
+  --ring: oklch(0.46 0.13 28);
+
+  --chart-1: oklch(0.46 0.13 28);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+
+  /* small radius — feels like printed paper, not a SaaS pill */
+  --radius: 0.25rem;
+
+  --sidebar: oklch(0.955 0.018 78);
+  --sidebar-foreground: oklch(0.21 0.02 50);
+  --sidebar-primary: oklch(0.46 0.13 28);
+  --sidebar-primary-foreground: oklch(0.98 0.01 80);
+  --sidebar-accent: oklch(0.91 0.04 80);
+  --sidebar-accent-foreground: oklch(0.32 0.04 50);
+  --sidebar-border: oklch(0.83 0.018 70);
+  --sidebar-ring: oklch(0.46 0.13 28);
+}
+
+.dark {
+  /* deep ink page */
+  --background: oklch(0.155 0.012 55);
+  --foreground: oklch(0.92 0.014 80);
+  --card: oklch(0.205 0.014 55);
+  --card-foreground: oklch(0.92 0.014 80);
+  --popover: oklch(0.205 0.014 55);
+  --popover-foreground: oklch(0.92 0.014 80);
+
+  --primary: oklch(0.66 0.15 32);
+  --primary-foreground: oklch(0.16 0.012 55);
+
+  --secondary: oklch(0.255 0.014 55);
+  --secondary-foreground: oklch(0.92 0.014 80);
+  --muted: oklch(0.255 0.014 55);
+  --muted-foreground: oklch(0.7 0.014 75);
+
+  --accent: oklch(0.32 0.05 50);
+  --accent-foreground: oklch(0.92 0.04 80);
+
+  --destructive: oklch(0.6 0.18 28);
+  --destructive-foreground: oklch(0.98 0.01 80);
+
+  --border: oklch(0.3 0.014 55);
+  --input: oklch(0.27 0.014 55);
+  --ring: oklch(0.66 0.15 32);
+
+  --sidebar: oklch(0.18 0.012 55);
+  --sidebar-foreground: oklch(0.92 0.014 80);
+  --sidebar-primary: oklch(0.66 0.15 32);
+  --sidebar-primary-foreground: oklch(0.16 0.012 55);
+  --sidebar-accent: oklch(0.32 0.05 50);
+  --sidebar-accent-foreground: oklch(0.92 0.04 80);
+  --sidebar-border: oklch(0.3 0.014 55);
+  --sidebar-ring: oklch(0.66 0.15 32);
+}
+
+@theme inline {
+  /* Display serif — Latin (Fraunces) falling back to Chinese serif (Noto Serif SC). */
+  --font-serif:
+    var(--font-fraunces), var(--font-noto-serif-sc), 'Fraunces', 'Noto Serif SC',
+    'Songti SC', 'STSong', 'SimSun', ui-serif, Georgia, serif;
+  /* UI sans — DM Sans, with Chinese fallback. */
+  --font-sans:
+    var(--font-dm-sans), 'DM Sans', var(--font-noto-serif-sc), 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', ui-sans-serif, system-ui, sans-serif;
+  /* Mono — JetBrains Mono for typewriter / metadata feel. */
+  --font-mono:
+    var(--font-jetbrains-mono), 'JetBrains Mono', ui-monospace, 'SFMono-Regular',
+    Menlo, Consolas, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius));
+  --radius-md: calc(var(--radius) + 1px);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    /* Optical sizing for variable Fraunces */
+    font-optical-sizing: auto;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    /* Paper grain — fine SVG noise, fixed so it tiles like printed paper. */
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size: 240px 240px;
+    background-attachment: fixed;
+    background-repeat: repeat;
+  }
+
+  .dark body {
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.045 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* Tighten serif optical metrics & enable italic stylistic alternate. */
+  .font-serif {
+    font-feature-settings: 'liga' 1, 'kern' 1, 'ss01' 1;
+  }
+
+  /* ---------------------------------------------------------------
+     Editorial scrollbars
+     The default browser / iframe scrollbar fights the warm-paper look.
+     We make it thin, transparent until interaction, and themed to the
+     ink/border palette. Mobile (iOS/Android) hides the indicator on its
+     own, so we only need to tweak desktop.
+     We deliberately do NOT use `display: none` — that breaks click-to-jump
+     and removes the visual feedback we need while reading long lists.
+  --------------------------------------------------------------- */
+  html {
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    /* Reserve gutter so layout doesn't shift when content grows past viewport */
+    scrollbar-gutter: stable;
+  }
+
+  /* WebKit / Chromium / Edge */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+    transition: background-color 200ms ease;
+  }
+
+  /* Reveal thumb only when the user is interacting with the page */
+  html:hover ::-webkit-scrollbar-thumb,
+  *:hover > ::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb:hover,
+  ::-webkit-scrollbar-thumb:active {
+    background-color: oklch(from var(--foreground) l c h / 0.18);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: oklch(from var(--foreground) l c h / 0.32);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Touch devices: don't reserve a gutter, native overlay scrollers
+     already vanish, so reclaim the few pixels for content. */
+  @media (hover: none) and (pointer: coarse) {
+    html {
+      scrollbar-gutter: auto;
+    }
+    ::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+  }
+
+  /* Opt-in helper for scroll containers that should never show a bar
+     (e.g. horizontal tag-filter strip on mobile). */
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+}
+
+@layer components {
+  /* ---------------------------------------------------------------
+     Editorial card — flat, hairline border, subtle inner highlight.
+  --------------------------------------------------------------- */
+  .paper-card {
+    position: relative;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow:
+      0 1px 0 oklch(from var(--card) calc(l + 0.02) c h) inset,
+      0 1px 1px oklch(0 0 0 / 0.02),
+      0 6px 20px -14px oklch(0 0 0 / 0.18);
+  }
+
+  .dark .paper-card {
+    box-shadow:
+      0 1px 0 oklch(from var(--card) calc(l + 0.04) c h / 0.5) inset,
+      0 1px 1px oklch(0 0 0 / 0.4),
+      0 10px 28px -16px oklch(0 0 0 / 0.55);
+  }
+
+  /* Hover edge ribbon for list cards. */
+  .editorial-edge {
+    position: absolute;
+    top: 0.75rem;
+    bottom: 0.75rem;
+    left: -1px;
+    width: 2px;
+    background-color: var(--primary);
+    opacity: 0;
+    transition:
+      opacity 200ms ease,
+      transform 200ms ease;
+    transform: scaleY(0.6);
+    transform-origin: center;
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  .group:hover > .editorial-edge,
+  .group:focus-within > .editorial-edge {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  /* ---------------------------------------------------------------
+     Bilingual section rule.
+       <div class="editorial-rule"><span>分组</span><em>Groups</em></div>
+  --------------------------------------------------------------- */
+  .editorial-rule {
+    display: flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    color: var(--muted-foreground);
+  }
+
+  .editorial-rule > span {
+    font-family: var(--font-serif);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--foreground);
+  }
+
+  .editorial-rule > em {
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 0.625rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .editorial-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    align-self: center;
+    transform: translateY(-1px);
+  }
+
+  /* Mono small-caps label, used standalone. */
+  .smallcaps {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  /* Decorative ornament glyph. */
+  .ornament {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--primary);
+    letter-spacing: 0.5em;
+    user-select: none;
+  }
+
+  /* Underline-style input variant for the login page. */
+  .input-rule {
+    background: transparent !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--border) !important;
+    border-radius: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-shadow: none !important;
+    transition: border-color 200ms ease;
+  }
+
+  .input-rule:focus,
+  .input-rule:focus-visible {
+    outline: none !important;
+    border-bottom-color: var(--primary) !important;
+    box-shadow: 0 1px 0 0 var(--primary) !important;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Stagger reveal for cards. Each card sets `--idx` inline.
+--------------------------------------------------------------- */
+@keyframes editorial-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.editorial-rise {
+  animation: editorial-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--idx, 0) * 45ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editorial-rise {
+    animation: none;
+  }
+}
