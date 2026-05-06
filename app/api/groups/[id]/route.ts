@@ -1,40 +1,54 @@
-import { NextResponse } from "next/server"
+import { NextResponse } from "next/server";
+import { requireAuth } from "@/lib/auth";
+import { enforceCsrf } from "@/lib/csrf";
 import {
   deleteClipboardGroup,
   updateClipboardGroup,
   StoreValidationError,
-} from "@/lib/clipboard-store"
+} from "@/lib/clipboard-store";
 
-type Ctx = { params: Promise<{ id: string }> }
+export const runtime = "nodejs";
+
+type Ctx = { params: Promise<{ id: string }> };
 
 export async function PATCH(req: Request, ctx: Ctx) {
-  const { id } = await ctx.params
-  let body: { name?: string; sortOrder?: number | null } = {}
+  const unauthorized = await requireAuth();
+  if (unauthorized) return unauthorized;
+  const csrfError = enforceCsrf(req);
+  if (csrfError) return csrfError;
+
+  const { id } = await ctx.params;
+  let body: { name?: string; sortOrder?: number | null } = {};
   try {
-    body = await req.json()
+    body = await req.json();
   } catch {
-    return NextResponse.json({ error: "请求格式错误" }, { status: 400 })
+    return NextResponse.json({ error: "请求格式错误" }, { status: 400 });
   }
   try {
-    const group = await updateClipboardGroup(id, body)
-    return NextResponse.json({ group })
+    const group = await updateClipboardGroup(id, body);
+    return NextResponse.json({ group });
   } catch (err) {
     if (err instanceof StoreValidationError) {
-      return NextResponse.json({ error: err.message }, { status: err.status })
+      return NextResponse.json({ error: err.message }, { status: err.status });
     }
-    throw err
+    return NextResponse.json({ error: "更新分组失败" }, { status: 500 });
   }
 }
 
-export async function DELETE(_req: Request, ctx: Ctx) {
-  const { id } = await ctx.params
+export async function DELETE(req: Request, ctx: Ctx) {
+  const unauthorized = await requireAuth();
+  if (unauthorized) return unauthorized;
+  const csrfError = enforceCsrf(req);
+  if (csrfError) return csrfError;
+
+  const { id } = await ctx.params;
   try {
-    await deleteClipboardGroup(id)
-    return NextResponse.json({ ok: true })
+    await deleteClipboardGroup(id);
+    return NextResponse.json({ ok: true });
   } catch (err) {
     if (err instanceof StoreValidationError) {
-      return NextResponse.json({ error: err.message }, { status: err.status })
+      return NextResponse.json({ error: err.message }, { status: err.status });
     }
-    throw err
+    return NextResponse.json({ error: "删除分组失败" }, { status: 500 });
   }
 }

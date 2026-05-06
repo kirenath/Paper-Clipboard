@@ -111,16 +111,28 @@ export async function verifySessionToken(
 }
 
 export function getSessionCookieOptions(maxAge: number) {
-  // Use SameSite=None + Secure so the cookie works inside cross-site
-  // iframes (e.g. the v0 preview). `partitioned` enables CHIPS so the
-  // cookie is isolated per top-level site, which modern browsers
-  // increasingly require for third-party cookies.
+  const thirdPartyIframeEnabled =
+    process.env.ENABLE_THIRD_PARTY_IFRAME_COOKIES === "true";
+  const secure =
+    process.env.NODE_ENV === "production" || thirdPartyIframeEnabled;
+
+  if (thirdPartyIframeEnabled) {
+    return {
+      name: SESSION_COOKIE_NAME,
+      httpOnly: true as const,
+      sameSite: "none" as const,
+      secure: true as const,
+      partitioned: true as const,
+      path: "/",
+      maxAge,
+    };
+  }
+
   return {
     name: SESSION_COOKIE_NAME,
     httpOnly: true as const,
-    sameSite: "none" as const,
-    secure: true as const,
-    partitioned: true as const,
+    sameSite: "lax" as const,
+    secure,
     path: "/",
     maxAge,
   };

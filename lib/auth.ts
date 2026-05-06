@@ -2,6 +2,7 @@ import "server-only";
 
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 import { SESSION_COOKIE_NAME, verifySessionToken } from "@/lib/session";
 
 // Development fallback bcrypt hash for the explicit dev-only password: "dev-password".
@@ -18,7 +19,7 @@ export function getAppPasswordHash(): string {
   }
 
   console.warn(
-    "APP_PASSWORD_HASH is not set; using explicit development fallback password: dev-password",
+    "APP_PASSWORD_HASH is not set; using explicit development fallback password hash",
   );
   return DEV_FALLBACK_PASSWORD_HASH;
 }
@@ -40,4 +41,12 @@ export async function getSession() {
 export async function isAuthenticated(): Promise<boolean> {
   const session = await getSession();
   return session !== null;
+}
+
+export async function requireAuth(): Promise<NextResponse | null> {
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: "未登录" }, { status: 401 });
+  }
+  return null;
 }

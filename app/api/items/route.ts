@@ -1,44 +1,60 @@
-import { NextResponse } from "next/server"
+import { NextResponse } from "next/server";
+import { requireAuth } from "@/lib/auth";
+import { enforceCsrf } from "@/lib/csrf";
 import {
   createClipboardItem,
   listClipboardItems,
   StoreValidationError,
-} from "@/lib/clipboard-store"
+} from "@/lib/clipboard-store";
+
+export const runtime = "nodejs";
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const groupParam = searchParams.get("groupId")
-  const tagParam = searchParams.getAll("tagId")
-  const query = searchParams.get("q") ?? undefined
+  const unauthorized = await requireAuth();
+  if (unauthorized) return unauthorized;
 
-  let groupId: string | null | "default" | undefined
-  if (groupParam === null) groupId = undefined
-  else if (groupParam === "default" || groupParam === "") groupId = "default"
-  else groupId = groupParam
+  try {
+    const { searchParams } = new URL(req.url);
+    const groupParam = searchParams.get("groupId");
+    const tagParam = searchParams.getAll("tagId");
+    const query = searchParams.get("q") ?? undefined;
 
-  const items = await listClipboardItems({
-    groupId,
-    tagIds: tagParam.length > 0 ? tagParam : undefined,
-    query,
-  })
-  return NextResponse.json({ items })
+    let groupId: string | null | "default" | undefined;
+    if (groupParam === null) groupId = undefined;
+    else if (groupParam === "default" || groupParam === "") groupId = "default";
+    else groupId = groupParam;
+
+    const items = await listClipboardItems({
+      groupId,
+      tagIds: tagParam.length > 0 ? tagParam : undefined,
+      query,
+    });
+    return NextResponse.json({ items });
+  } catch {
+    return NextResponse.json({ error: "读取条目失败" }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {
+  const unauthorized = await requireAuth();
+  if (unauthorized) return unauthorized;
+  const csrfError = enforceCsrf(req);
+  if (csrfError) return csrfError;
+
   let body: {
-    title?: string | null
-    content?: string
-    groupId?: string | null
-    tagIds?: string[]
-    sortOrder?: number | null
-  } = {}
+    title?: string | null;
+    content?: string;
+    groupId?: string | null;
+    tagIds?: string[];
+    sortOrder?: number | null;
+  } = {};
   try {
-    body = await req.json()
+    body = await req.json();
   } catch {
-    return NextResponse.json({ error: "请求格式错误" }, { status: 400 })
+    return NextResponse.json({ error: "请求格式错误" }, { status: 400 });
   }
   if (typeof body.content !== "string") {
-    return NextResponse.json({ error: "正文不能为空" }, { status: 400 })
+    return NextResponse.json({ error: "正文不能为空" }, { status: 400 });
   }
   try {
     const item = await createClipboardItem({
@@ -47,12 +63,12 @@ export async function POST(req: Request) {
       groupId: body.groupId ?? null,
       tagIds: body.tagIds ?? [],
       sortOrder: body.sortOrder ?? null,
-    })
-    return NextResponse.json({ item }, { status: 201 })
+    });
+    return NextResponse.json({ item }, { status: 201 });
   } catch (err) {
     if (err instanceof StoreValidationError) {
-      return NextResponse.json({ error: err.message }, { status: err.status })
+      return NextResponse.json({ error: err.message }, { status: err.status });
     }
-    throw err
+    return NextResponse.json({ error: "创建条目失败" }, { status: 500 });
   }
 }
